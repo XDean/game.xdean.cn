@@ -1,5 +1,3 @@
-const Page = () => {
-  return 'Hello World'
-}
+import { First } from '../src/game/first';
 
-export default Page
+export default First
