@@ -1,11 +1,11 @@
-import Phaser from 'phaser';
-
+import { PhaserConfig } from '../../phaser/api';
 import HelloWorldScene from './scene';
 
-const config: Phaser.Types.Core.GameConfig = {
+export const config: PhaserConfig = ({parentId}) => ({
   type: Phaser.AUTO,
   width: 800,
   height: 600,
+  parent: parentId,
   physics: {
     default: 'arcade',
     arcade: {
@@ -13,6 +13,4 @@ const config: Phaser.Types.Core.GameConfig = {
     },
   },
   scene: [HelloWorldScene],
-};
-
-export default new Phaser.Game(config);
+});
