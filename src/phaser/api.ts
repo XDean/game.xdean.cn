@@ -10,7 +10,11 @@ export type Image = {
   url: string
 }
 
-export type SpriteSheet = {
+export function image(i: Omit<Image, 'type'>): Image {
+  return {type: 'image', ...i};
+}
+
+export type SpriteSheet<A extends string> = {
   type: 'sprite-sheet',
   key: string,
   url: string,
@@ -18,6 +22,22 @@ export type SpriteSheet = {
     width: number,
     height: number,
   }
+  anims: {
+    [K in A]: {
+      key: string, frames: number[]
+    }
+    & Omit<Phaser.Types.Animations.Animation, 'frames'>
+  }
 }
 
-export type Asset = Image | SpriteSheet
+export function spriteSheet<T extends string>(ss: Omit<SpriteSheet<T>, 'type'>): SpriteSheet<T> {
+  return {type: 'sprite-sheet', ...ss};
+}
+
+export type Asset = Image | SpriteSheet<any>
+
+export function assets<T extends {
+  [K in string]: T[K] & Asset
+}>(assets: T) {
+  return assets;
+}

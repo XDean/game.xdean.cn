@@ -1,69 +1,98 @@
-import { Asset } from '../../phaser/api';
+import { assets, image, spriteSheet } from '../../phaser/api';
 
-export namespace Assets {
-  export const ceiling: Asset = {
-    type: 'image',
+export const Assets = assets({
+  ceiling: image({
     key: 'ceiling',
     url: 'ceiling.png',
-  };
-  export const conveyor_left: Asset = {
-    type: 'sprite-sheet',
+  }),
+  conveyor_left: spriteSheet({
     key: 'conveyor_left',
     url: 'conveyor_left.png',
     frame: {
       width: 96,
       height: 16,
     },
-  };
-  export const conveyor_right: Asset = {
-    type: 'sprite-sheet',
+    anims: {},
+  }),
+  conveyor_right: spriteSheet({
     key: 'conveyor_right',
     url: 'conveyor_right.png',
     frame: {
       width: 96,
       height: 16,
     },
-  };
-  export const fake: Asset = {
-    type: 'sprite-sheet',
+    anims: {},
+  }),
+  fake: spriteSheet({
     key: 'fake',
     url: 'fake.png',
     frame: {
       width: 96,
       height: 36,
     },
-  };
-  export const nails: Asset = {
-    type: 'image',
+    anims: {},
+  }),
+  nails: image({
     key: 'nails',
     url: 'nails.png',
-  };
-  export const normal: Asset = {
-    type: 'image',
+  }),
+  normal: image({
     key: 'normal',
     url: 'normal.png',
-  };
-  export const player: Asset = {
-    type: 'sprite-sheet',
+  }),
+  player: spriteSheet({
     key: 'player',
     url: 'player.png',
     frame: {
       width: 32,
       height: 32,
     },
-  };
-  export const trampoline: Asset = {
-    type: 'sprite-sheet',
+    anims: {
+      left: {
+        key: 'left',
+        frames: [0, 1, 2, 3],
+        frameRate: 6,
+        repeat: -1,
+      },
+      damageLeft: {
+        key: 'damageLeft',
+        frames: [4, 5, 6, 7],
+        frameRate: 6,
+        repeat: -1,
+      },
+      stay: {
+        key: 'stay',
+        frames: [8],
+      },
+      right: {
+        key: 'right',
+        frames: [9, 10, 11, 12],
+        frameRate: 6,
+        repeat: -1,
+      },
+      damageRight: {
+        key: 'damageRight',
+        frames: [13, 14, 15, 16],
+        frameRate: 6,
+        repeat: -1,
+      },
+      damageStay: {
+        key: 'damageStay',
+        frames: [17],
+      },
+    },
+  }),
+  trampoline: spriteSheet({
     key: 'trampoline',
     url: 'trampoline.png',
     frame: {
       width: 96,
       height: 22,
     },
-  };
-  export const wall: Asset = {
-    type: 'image',
+    anims: {},
+  }),
+  wall: image({
     key: 'wall',
     url: 'wall.png',
-  };
-}
+  }),
+});
