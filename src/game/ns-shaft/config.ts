@@ -8,9 +8,6 @@ export const config: PhaserConfig = ({parentId}) => ({
   height: 800,
   physics: {
     default: 'arcade',
-    arcade: {
-      gravity: {y: 200},
-    },
   },
   scene: [NSShaftScene],
 });

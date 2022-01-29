@@ -2,6 +2,10 @@ import Phaser from 'phaser';
 import { SpriteSheet } from '../../phaser/api';
 import { loadAsset } from '../../phaser/util';
 import { Assets } from './assets';
+import { Board } from './sprite/board';
+import { Ceiling } from './sprite/ceiling';
+import { Player } from './sprite/player';
+import { Wall } from './sprite/wall';
 
 export class NSShaftScene extends Phaser.Scene {
 
@@ -18,37 +22,34 @@ export class NSShaftScene extends Phaser.Scene {
     Object.values(Assets)
       .filter(e => e.type === 'sprite-sheet')
       .map(e => e as SpriteSheet<any>)
-      .forEach(e => {
-        Object.values(e.anims).forEach(({frames, ...rest}) => {
-          this.anims.create({
-            frames: frames.map(f => ({key: e.key, frame: f})),
-            ...rest,
-          });
-        });
-      });
+      .forEach(e => Object.values(e.anims).forEach(({frames, ...rest}) =>
+        this.anims.create({
+          frames: frames.map(f => ({key: e.key, frame: f})),
+          ...rest,
+        })));
 
-    const platforms = this.physics.add.staticGroup();
-    (platforms.create(0, 400, Assets.wall.key) as Phaser.Physics.Arcade.Image).setScale(2).refreshBody();
-    (platforms.create(600, 400, Assets.wall.key) as Phaser.Physics.Arcade.Image).setScale(2).refreshBody();
-    (platforms.create(300, 12, Assets.ceiling.key) as Phaser.Physics.Arcade.Image).setScale(1.5).refreshBody();
+    const statics = this.physics.add.staticGroup();
+    statics.add(new Wall(this, 0, 400));
+    statics.add(new Wall(this, 600, 400));
+    statics.add(new Ceiling(this, 300, 12));
 
-    const player = this.physics.add.sprite(200, 200, Assets.player.key);
-    player.setBounce(0.1);
-    player.setCollideWorldBounds(true);
-    player.play(Assets.player.anims.stay.key);
-    this.physics.add.collider(player, platforms);
-    const cursors = this.input.keyboard.createCursorKeys();
+    const player = new Player(this, 300, 50);
+
+    const initBoard = new Board.Normal(this, 300, 600);
+    let boards = [initBoard];
+
+    this.physics.add.collider(player, statics);
+    this.physics.add.collider(player, initBoard);
 
     this.update = () => {
-      if (cursors.left.isDown) {
-        player.setVelocityX(-160);
-        player.anims.play(Assets.player.anims.left.key, true);
-      } else if (cursors.right.isDown) {
-        player.setVelocityX(160);
-        player.anims.play(Assets.player.anims.right.key, true);
-      } else {
-        player.setVelocityX(0);
-        player.anims.play(Assets.player.anims.stay.key);
+      const oldBoards = boards;
+      boards = oldBoards.filter(e => e.body.position.y >= -20);
+      oldBoards.filter(e => e.body.position.y < -20).forEach(e => e.destroy());
+      const maxY = boards.map(e => e.body.position.y).reduce((a, b) => a > b ? a : b);
+      if (maxY < 800) {
+        const newBoard = new Board.Normal(this, Math.random() * 500 + 50, maxY + 150);
+        boards.push(newBoard);
+        this.physics.add.collider(player, newBoard);
       }
     };
   }
